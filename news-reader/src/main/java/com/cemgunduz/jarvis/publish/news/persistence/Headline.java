@@ -18,6 +18,8 @@ public class Headline {
     private String source;
     private String link;
 
+    private Boolean delivered = true;
+
     public String getId() {
         return id;
     }
@@ -48,6 +50,14 @@ public class Headline {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public Boolean getDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(Boolean delivered) {
+        this.delivered = delivered;
     }
 
     public static Headline toHeadline(Publishable publishable)
