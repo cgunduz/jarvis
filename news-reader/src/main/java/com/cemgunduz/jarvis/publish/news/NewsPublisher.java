@@ -1,19 +1,21 @@
 package com.cemgunduz.jarvis.publish.news;
 
+import com.cemgunduz.jarvis.configuration.MailConfiguration;
 import com.cemgunduz.jarvis.configuration.ServerNames;
+import com.cemgunduz.jarvis.email.EmailInput;
+import com.cemgunduz.jarvis.email.EmailSendingResponse;
 import com.cemgunduz.jarvis.publish.Publishable;
 import com.cemgunduz.jarvis.publish.Publisher;
-import com.cemgunduz.jarvis.publish.news.persistence.Headline;
-import com.cemgunduz.jarvis.publish.news.persistence.HeadlineDao;
+import com.cemgunduz.jarvis.publish.persistence.Headline;
+import com.cemgunduz.jarvis.publish.persistence.HeadlineDao;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
-import com.netflix.discovery.converters.Auto;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 /**
  * Created by cem on 04/07/16.
@@ -30,6 +32,9 @@ public class NewsPublisher implements Publisher {
     @Autowired
     ServerNames serverNames;
 
+    @Autowired
+    MailConfiguration mailConfiguration;
+
     public void publish(Publishable publishable)
     {
         if(publishable.isReportable()) broadcast(publishable);
@@ -38,12 +43,24 @@ public class NewsPublisher implements Publisher {
 
     private void broadcast(Publishable publishable)
     {
+        EmailInput emailInput =
+                new EmailInput(publishable, mailConfiguration.getFrom(), mailConfiguration.getTo());
+
         InstanceInfo info = eurekaClient.getNextServerFromEureka(serverNames.getPUBLISHER(), false);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response =
-                restTemplate.postForEntity(info.getHomePageUrl()+"/email", "Hello", String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<EmailInput> entity = new HttpEntity<>(emailInput, headers);
+        ResponseEntity<EmailSendingResponse> response =
+                restTemplate.postForEntity(info.getHomePageUrl()+"/email", entity, EmailSendingResponse.class);
 
-        System.out.println("Sent !");
+        if(!response.getStatusCode().equals(HttpStatus.OK)
+                || !response.getBody().isSent())
+        {
+            // TODO : Log and warn
+            response.getBody().getReason();
+        }
     }
 
     private void record(Publishable publishable)

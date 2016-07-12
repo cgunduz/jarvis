@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public interface Publishable {
 
-    String getType();
+    Type getType();
     String getTitle();
     String getLink();
     String getDescription();
@@ -16,6 +16,11 @@ public interface Publishable {
     enum Severity
     {
         LOW, MEDIUM, HIGH
+    }
+
+    enum Type
+    {
+        EKSISOZLUK, ANONYMOUS
     }
 
     Severity getSeverity();

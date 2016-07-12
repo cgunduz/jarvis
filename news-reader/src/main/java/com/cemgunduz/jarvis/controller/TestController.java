@@ -22,7 +22,7 @@ public class TestController {
     public void testEndpoint()
     {
         News news = new News(
-                "a","b","c", "d", null, Publishable.Severity.HIGH);
+                Publishable.Type.EKSISOZLUK,"b","c", "d", null, Publishable.Severity.HIGH);
 
         newsPublisher.publish(news);
     }

@@ -1,9 +1,8 @@
-package com.cemgunduz.jarvis.publish.news.persistence;
+package com.cemgunduz.jarvis.publish.persistence;
 
 import com.cemgunduz.jarvis.publish.Publishable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by cem on 04/07/16.
@@ -68,7 +67,7 @@ public class Headline {
                 publishable.getLink()
         );
         headline.setSource(
-                publishable.getType()
+                publishable.getType().name()
         );
         headline.setTitle(
                 publishable.getTitle()

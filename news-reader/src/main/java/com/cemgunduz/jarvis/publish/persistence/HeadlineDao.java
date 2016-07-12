@@ -1,4 +1,4 @@
-package com.cemgunduz.jarvis.publish.news.persistence;
+package com.cemgunduz.jarvis.publish.persistence;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

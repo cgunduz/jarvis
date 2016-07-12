@@ -18,8 +18,4 @@ public class ServerNames {
     public String getPUBLISHER() {
         return PUBLISHER;
     }
-
-    public void setPUBLISHER(String PUBLISHER) {
-        this.PUBLISHER = PUBLISHER;
-    }
 }

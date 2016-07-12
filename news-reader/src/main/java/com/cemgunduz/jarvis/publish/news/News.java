@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class News implements Publishable {
 
-    private String type;
+    private Type type;
     private String title;
     private String link;
     private String description;
@@ -17,7 +17,7 @@ public class News implements Publishable {
     private Severity severity;
 
     @Override
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
@@ -57,7 +57,7 @@ public class News implements Publishable {
                 severity.equals(Severity.MEDIUM);
     }
 
-    public News(String type, String title, String link, String description,
+    public News(Type type, String title, String link, String description,
                 Map<String, Object> infoMap, Severity severity) {
         this.type = type;
         this.title = title;
