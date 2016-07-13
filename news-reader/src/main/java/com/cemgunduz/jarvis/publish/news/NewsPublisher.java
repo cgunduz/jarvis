@@ -20,7 +20,7 @@ import java.util.Arrays;
 /**
  * Created by cem on 04/07/16.
  */
-@Service
+@Service(value = "NewsPublisher")
 public class NewsPublisher implements Publisher {
 
     @Autowired

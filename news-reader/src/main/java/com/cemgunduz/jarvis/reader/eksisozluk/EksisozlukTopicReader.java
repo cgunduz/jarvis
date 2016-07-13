@@ -15,7 +15,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,10 +47,11 @@ public class EksisozlukTopicReader implements Reader {
 
             if(!isProcessableTopic(topics, eksiTopic)) continue;
 
-            boolean notify = true;
+            boolean notify = false;
             if(topics.size() > TOPICS_TO_CONSIDER)
             {
                 int maxEntriesToday = 0;
+                notify = true;
                 for(int i = 0; i < TOPICS_TO_CONSIDER; i++)
                 {
                     int entryCount = topics.get(TOPICS_TO_CONSIDER-1-i).getEntriesToday();
@@ -136,7 +136,7 @@ public class EksisozlukTopicReader implements Reader {
         // Old News, ignore
         if(topics.get(0).getNotified())
         {
-            return false;
+            //return false;
         }
 
         return true;
