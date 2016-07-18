@@ -1,5 +1,6 @@
 package com.cemgunduz.jarvis.reader.eksisozluk.persistence;
 
+import com.cemgunduz.jarvis.popularity.PopulerItem;
 import com.cemgunduz.jarvis.publish.Publishable;
 import com.cemgunduz.jarvis.publish.news.News;
 import org.springframework.data.annotation.Id;
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 
 @Document(collection = "EksiTopic")
-public class EksiTopic {
+public class EksiTopic implements PopulerItem{
 
     @Id
     String id;
@@ -99,5 +100,10 @@ public class EksiTopic {
         );
         
         return publishable;
+    }
+
+    @Override
+    public int getPopularity() {
+        return entriesToday;
     }
 }

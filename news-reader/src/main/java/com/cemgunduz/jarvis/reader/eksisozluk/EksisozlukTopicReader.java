@@ -1,5 +1,8 @@
 package com.cemgunduz.jarvis.reader.eksisozluk;
 
+import com.cemgunduz.jarvis.popularity.PopularityChecker;
+import com.cemgunduz.jarvis.popularity.impl.ExponentialPopularityChecker;
+import com.cemgunduz.jarvis.popularity.impl.LinearPopularityChecker;
 import com.cemgunduz.jarvis.publish.Publishable;
 import com.cemgunduz.jarvis.publish.Publisher;
 import com.cemgunduz.jarvis.publish.PublisherFactory;
@@ -48,26 +51,19 @@ public class EksisozlukTopicReader implements Reader {
             if(!isProcessableTopic(topics, eksiTopic)) continue;
 
             boolean notify = false;
-            if(topics.size() > TOPICS_TO_CONSIDER)
-            {
-                int maxEntriesToday = 0;
-                notify = true;
-                for(int i = 0; i < TOPICS_TO_CONSIDER; i++)
-                {
-                    int entryCount = topics.get(TOPICS_TO_CONSIDER-1-i).getEntriesToday();
-
-                    //NOT TRENDING
-                    if(entryCount < maxEntriesToday)
-                    {
-                        notify = false;
-                        break;
-                    }
-
-                    maxEntriesToday = entryCount;
-                }
-            }
 
             if(eksiTopic.getEntriesToday() > MAX_CAP_PER_DAY) notify = true;
+            else
+            {
+                for(PopularityChecker popularityChecker : getCheckers(topics))
+                {
+                    if(popularityChecker.isPopular())
+                    {
+                        notify = true;
+                        break;
+                    }
+                }
+            }
 
             if(notify)
             {
@@ -140,5 +136,20 @@ public class EksisozlukTopicReader implements Reader {
         }
 
         return true;
+    }
+
+    private List<PopularityChecker> getCheckers(List<EksiTopic> topics)
+    {
+        List<PopularityChecker> checkers = new ArrayList<>();
+        if(topics.size() >= ExponentialPopularityChecker.getMinimumAmountOfItemsNeeded())
+        {
+            checkers.add(new ExponentialPopularityChecker(topics));
+        }
+        else if(topics.size() >= LinearPopularityChecker.getMinimumAmountOfItemsNeeded())
+        {
+            checkers.add(new LinearPopularityChecker(topics));
+        }
+
+        return checkers;
     }
 }

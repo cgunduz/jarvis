@@ -8,5 +8,5 @@ import org.springframework.scheduling.support.CronTrigger;
 public interface Job {
 
     void execute();
-    CronTrigger getCronTrigger();
+    Long getFixedInterval();
 }

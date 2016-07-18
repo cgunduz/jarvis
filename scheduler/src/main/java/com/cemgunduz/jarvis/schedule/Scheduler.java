@@ -4,6 +4,7 @@ import com.cemgunduz.jarvis.schedule.jobs.Job;
 import com.netflix.discovery.EurekaClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Created by cem on 14/07/16.
@@ -41,23 +44,30 @@ public class Scheduler {
             String serviceUrl = eurekaClient.getNextServerFromEureka(serviceName, false).getHomePageUrl();
             String endpoint = serviceUrl.concat(schedule.getEndpoint());
 
+            /*
+            TODO : Trigger mechanism has a bug and invokes requests for multiple times ? Find out why.
             StringBuilder cronTriggerString = new StringBuilder();
             cronTriggerString.append(triggerBuilder(schedule.getInterval().getSeconds()));
             cronTriggerString.append(triggerBuilder(schedule.getInterval().getMins()));
             cronTriggerString.append(triggerBuilder(schedule.getInterval().getHours()));
-            cronTriggerString.append("* * *");
+            cronTriggerString.append("* * ?");
 
             CronTrigger cronTrigger = new CronTrigger(cronTriggerString.toString());
+            */
 
-            Job job = new SimpleRestTrigger(endpoint, cronTrigger);
+            int milliSeconds = schedule.getInterval().getSeconds() * 1000 +
+                    schedule.getInterval().getMins() * 60 * 1000 +
+                    schedule.getInterval().getHours() * 60 * 60 * 1000;
+
+            Job job = new SimpleRestIntervalTrigger(endpoint, Long.valueOf(milliSeconds));
             jobList.add(job);
 
-            taskScheduler.schedule(new Runnable() {
+            taskScheduler.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
                     job.execute();
                 }
-            }, job.getCronTrigger());
+            }, job.getFixedInterval());
         }
     }
 

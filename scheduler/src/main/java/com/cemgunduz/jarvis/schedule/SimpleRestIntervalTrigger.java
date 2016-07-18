@@ -1,23 +1,20 @@
 package com.cemgunduz.jarvis.schedule;
 
 import com.cemgunduz.jarvis.schedule.jobs.Job;
-import org.springframework.http.*;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
-
 /**
- * Created by cem on 14/07/16.
+ * Created by cem on 18/07/16.
  */
-public class SimpleRestTrigger implements Job {
+public class SimpleRestIntervalTrigger implements Job{
 
     private String endpoint;
-    private CronTrigger cronTrigger;
+    private Long milliseconds;
 
-    public SimpleRestTrigger(String endpoint, CronTrigger cronTrigger) {
+    public SimpleRestIntervalTrigger(String endpoint, Long milliseconds) {
         this.endpoint = endpoint;
-        this.cronTrigger = cronTrigger;
+        this.milliseconds = milliseconds;
     }
 
     @Override
@@ -28,7 +25,7 @@ public class SimpleRestTrigger implements Job {
     }
 
     @Override
-    public CronTrigger getCronTrigger() {
-        return cronTrigger;
+    public Long getFixedInterval() {
+        return milliseconds;
     }
 }

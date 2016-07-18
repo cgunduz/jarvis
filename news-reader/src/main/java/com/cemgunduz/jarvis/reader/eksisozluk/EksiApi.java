@@ -3,6 +3,7 @@ package com.cemgunduz.jarvis.reader.eksisozluk;
 import com.cemgunduz.jarvis.publish.Publishable;
 import com.cemgunduz.jarvis.publish.Publisher;
 import com.cemgunduz.jarvis.publish.PublisherFactory;
+import com.cemgunduz.jarvis.reader.eksisozluk.persistence.EksiTopicDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,9 @@ public class EksiApi {
     @Autowired
     PublisherFactory publisherFactory;
 
+    @Autowired
+    EksiTopicDao eksiTopicDao;
+
     @RequestMapping(method = RequestMethod.GET)
     public String initiate()
     {
@@ -34,6 +38,13 @@ public class EksiApi {
             publisher.publish(publishable);
         }
 
+        return "Done ! ";
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    public String clean()
+    {
+        eksiTopicDao.deleteAll();
         return "Done ! ";
     }
 
