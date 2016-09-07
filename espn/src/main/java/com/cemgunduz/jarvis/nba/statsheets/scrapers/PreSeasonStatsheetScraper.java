@@ -87,6 +87,8 @@ public class PreSeasonStatsheetScraper implements PlayerStatsheetScraper {
         statsheet.setTurnovers(extractStats(line,10));
         statsheet.setPoints(extractStats(line,11));
 
+        statsheet.precentagePredictor();
+
         return statsheet;
     }
 

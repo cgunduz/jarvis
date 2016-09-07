@@ -5,5 +5,16 @@ package com.cemgunduz.jarvis.nba.statsheets;
  */
 public enum StatsheetType {
 
-    PREVIOUS_YEAR, PROJECTIONS
+    // TODO : Read from configuration
+    PREVIOUS_YEAR(0.15), PROJECTIONS(0.85);
+
+    private double weight;
+
+    StatsheetType(double weight) {
+        this.weight = weight;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
 }

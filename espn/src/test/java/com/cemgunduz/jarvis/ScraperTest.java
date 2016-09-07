@@ -19,5 +19,9 @@ public class ScraperTest {
 
         List<BasketballPlayer> players = playerStatsheetScraper.scrapePlayerSheets();
         System.out.println(players.get(0).getName());
+
+
     }
+
+
 }
