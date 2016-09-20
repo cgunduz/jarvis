@@ -75,4 +75,20 @@ public class PlayerReport {
         if(basketballPlayer.getSheet(StatsheetType.PROJECTIONS) == null ) return 0;
         return basketballPlayer.getSheet(StatsheetType.PROJECTIONS).getGamesPlayed();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlayerReport that = (PlayerReport) o;
+
+        return basketballPlayer != null ? basketballPlayer.equals(that.basketballPlayer) : that.basketballPlayer == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return basketballPlayer != null ? basketballPlayer.hashCode() : 0;
+    }
 }

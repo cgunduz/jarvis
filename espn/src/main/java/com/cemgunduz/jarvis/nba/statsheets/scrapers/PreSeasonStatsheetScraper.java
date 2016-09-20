@@ -31,7 +31,7 @@ public class PreSeasonStatsheetScraper implements PlayerStatsheetScraper {
             String url = ESPN_PROJECTIONS.replace("$START_INDEX", String.valueOf(startIndex));
             Document doc = null;
             try {
-                doc = Jsoup.connect(url).get();
+                doc = Jsoup.connect(url).timeout(100000).get();
             } catch (IOException e) {
                 e.printStackTrace();
             }
