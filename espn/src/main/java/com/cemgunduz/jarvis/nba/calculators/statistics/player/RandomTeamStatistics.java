@@ -63,7 +63,7 @@ public class RandomTeamStatistics {
         {
             for(int j = 0; j < TEAM_COUNT; j++)
             {
-                int randomNum = random.nextInt(copyList.size());
+                int randomNum = random.nextInt(20 > copyList.size() ? copyList.size() : 20);
                 playerTeams[j].addPlayer(copyList.get(randomNum));
 
                 copyList.remove(randomNum);
