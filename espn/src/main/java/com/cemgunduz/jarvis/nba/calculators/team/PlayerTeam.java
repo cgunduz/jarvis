@@ -12,6 +12,16 @@ import java.util.List;
  */
 public class PlayerTeam {
 
+    public PlayerTeam()
+    {
+        this("0", "Dummy");
+    }
+
+    public PlayerTeam(String playerEspnId, String playerName) {
+        this.playerEspnId = playerEspnId;
+        this.playerName = playerName;
+    }
+
     private String playerName;
     private String playerEspnId;
 
@@ -27,6 +37,8 @@ public class PlayerTeam {
         Double result = 0.0;
         for(PlayerReport playerReport : playerReports)
         {
+            if(playerReport.isInjured()) continue;
+
             result += playerReport.getStatMap().get(stat);
         }
 
@@ -46,4 +58,53 @@ public class PlayerTeam {
     public List<PlayerReport> getPlayerReports() {
         return playerReports;
     }
+
+    public String getPlayerEspnId() {
+        return playerEspnId;
+    }
+
+    public String getPlayerName()
+    {
+        return playerReports.get(0) != null ? playerReports.get(0).getPlayerTeamName() : playerName;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Team id : ");
+        stringBuilder.append(playerEspnId);
+        stringBuilder.append(newLine());
+        stringBuilder.append("Team name : ");
+        stringBuilder.append(getPlayerName());
+        stringBuilder.append(newLine());
+        stringBuilder.append("FG : ");
+        stringBuilder.append(getTeamCumulativeForFG());
+        stringBuilder.append(newLine());
+        stringBuilder.append("FT : ");
+        stringBuilder.append(getTeamCumulativeForFT());
+        stringBuilder.append(newLine());
+        for(Stat stat : Stat.values())
+        {
+            if(stat.isSpecial())
+                continue;
+
+            stringBuilder.append(stat.name());
+            stringBuilder.append(" : ");
+            stringBuilder.append(getTeamCumulativeBy(stat));
+            stringBuilder.append(newLine());
+        }
+
+        stringBuilder.append(" PLAYERS : ");
+        stringBuilder.append(newLine());
+        for(PlayerReport playerReport : playerReports)
+        {
+            stringBuilder.append(playerReport.toString());
+            stringBuilder.append(newLine());
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private String newLine(){ return "\n"; }
 }

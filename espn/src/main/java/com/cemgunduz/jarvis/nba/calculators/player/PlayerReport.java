@@ -55,6 +55,11 @@ public class PlayerReport {
         }
     }
 
+    public boolean isInjured()
+    {
+        return basketballPlayer.getStatus().equals(Status.O);
+    }
+
     public void quantify(double percentage)
     {
         percentage = 1 + percentage;
@@ -68,6 +73,17 @@ public class PlayerReport {
     public String getPlayerName()
     {
         return basketballPlayer.getName();
+    }
+
+    public String getPlayerTeamName()
+    {
+        return basketballPlayer.getTeamName();
+    }
+
+    public Boolean isAvailable() {
+        // TODO : Dirty hack
+        return basketballPlayer.getTeamName().equals("FA") ||
+                basketballPlayer.getTeamName().contains("WA");
     }
 
     public int getGamesPlayed() {
@@ -90,5 +106,18 @@ public class PlayerReport {
     @Override
     public int hashCode() {
         return basketballPlayer != null ? basketballPlayer.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(basketballPlayer.getName());
+        stringBuilder.append("\n");
+        stringBuilder.append(getTotalValue());
+        stringBuilder.append("\n");
+        stringBuilder.append(statMap);
+
+        return stringBuilder.toString();
     }
 }

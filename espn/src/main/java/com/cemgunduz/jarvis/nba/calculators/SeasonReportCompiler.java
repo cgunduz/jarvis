@@ -5,22 +5,21 @@ import com.cemgunduz.jarvis.nba.League;
 import com.cemgunduz.jarvis.nba.calculators.player.PlayerReport;
 import com.cemgunduz.jarvis.nba.calculators.player.PlayerValueCalculator;
 import com.cemgunduz.jarvis.nba.calculators.stat.SimpleStatValueCalculator;
-import com.cemgunduz.jarvis.nba.calculators.stat.Stat;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PlayerStatsheetScraper;
-import com.cemgunduz.jarvis.nba.statsheets.scrapers.PreSeasonStatsheetScraper;
-import org.springframework.stereotype.Repository;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.SeasonStatsheetScraper;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Created by cem on 20/09/16.
+ * Created by cem on 26/10/16.
  */
-public class PreSeasonReportCompiler {
+public class SeasonReportCompiler {
 
-    public List<PlayerReport> compile()
-    {
-        PlayerStatsheetScraper playerStatsheetScraper = new PreSeasonStatsheetScraper();
+    public List<PlayerReport> compile() {
+
+        PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper();
         List<BasketballPlayer> playerList = playerStatsheetScraper.scrapePlayerSheets();
 
         League league = new League(playerList);
@@ -33,8 +32,6 @@ public class PreSeasonReportCompiler {
         int order = 1;
         for(PlayerReport playerReport : playerReports)
         {
-            double minutes = playerReport.getGamesPlayed();
-            playerReport.setTotalValue( playerReport.getTotalValue() * minutes / 82);
             playerReport.espnRankings = order;
             order++;
         }
@@ -48,6 +45,7 @@ public class PreSeasonReportCompiler {
             }
         });
 
-        return playerReports;
+        return playerReports.stream().filter(player -> player.isAvailable()).
+                collect(Collectors.toList());
     }
 }

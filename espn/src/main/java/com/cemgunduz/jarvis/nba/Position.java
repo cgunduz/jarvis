@@ -5,5 +5,15 @@ package com.cemgunduz.jarvis.nba;
  */
 public enum Position {
 
-    PG,SG,SF,PF,C
+    PG,SG,SF,PF,C;
+
+    public static Position getPositionByString(String pos)
+    {
+        for(Position position : values())
+        {
+            if(position.toString().equals(pos)) return position;
+        }
+
+        return null;
+    }
 }

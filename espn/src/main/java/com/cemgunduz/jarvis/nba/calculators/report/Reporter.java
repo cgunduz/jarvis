@@ -2,7 +2,9 @@ package com.cemgunduz.jarvis.nba.calculators.report;
 
 import com.cemgunduz.jarvis.nba.calculators.player.PlayerReport;
 import com.cemgunduz.jarvis.nba.calculators.stat.Stat;
+import com.cemgunduz.jarvis.nba.calculators.team.ReportablePlayerTeam;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,6 +35,40 @@ public class Reporter {
                 addLine("FG : 0");
                 addLine("FT : 0");
             }
+
+            rank++;
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public String compileTeamReport(List<ReportablePlayerTeam> reportables)
+    {
+        stringBuilder = new StringBuilder();
+
+        reportables.sort(new Comparator<ReportablePlayerTeam>() {
+
+            @Override
+            public int compare(ReportablePlayerTeam o1, ReportablePlayerTeam o2) {
+
+                if(o1.getPoints() == o2.getPoints()) return 0;
+                return o1.getPoints() - o2.getPoints() > 0 ? -1 : 1;
+            }
+        });
+
+        for(ReportablePlayerTeam reportablePlayerTeam : reportables)
+        {
+            addLine("Team id : ".concat(reportablePlayerTeam.getPlayerTeam().getPlayerEspnId()).
+                    concat(" Team name : ".concat(reportablePlayerTeam.getPlayerTeam().getPlayerName())).
+                    concat(" - ").
+                    concat(String.valueOf(reportablePlayerTeam.getPoints())));
+        }
+
+        int rank = 1;
+        for(ReportablePlayerTeam reportablePlayerTeam : reportables)
+        {
+            addLine(String.valueOf(rank).concat(")"));
+            addLine(reportablePlayerTeam.toString());
 
             rank++;
         }

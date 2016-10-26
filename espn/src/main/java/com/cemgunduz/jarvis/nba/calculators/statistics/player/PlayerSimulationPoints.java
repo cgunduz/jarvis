@@ -28,6 +28,7 @@ public class PlayerSimulationPoints {
         int index = playerSimulationPointsList.indexOf(proxy);
         PlayerSimulationPoint playerSimulationPoint = playerSimulationPointsList.get(index);
         playerSimulationPoint.increment(points);
+        playerSimulationPoint.incrementParticipation();
     }
 
     public void sort()
@@ -37,7 +38,12 @@ public class PlayerSimulationPoints {
             @Override
             public int compare(PlayerSimulationPoint o1, PlayerSimulationPoint o2) {
 
-                return o2.getPoints() - o1.getPoints();
+                double res = o2.getRealPoints() - o1.getRealPoints();
+
+                if(res > 0) return 1;
+                else if(res == 0.0) return 0;
+
+                return -1;
             }
         });
     }

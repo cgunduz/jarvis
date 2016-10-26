@@ -1,5 +1,6 @@
 package com.cemgunduz.jarvis.nba;
 
+import com.cemgunduz.jarvis.nba.calculators.player.Status;
 import com.cemgunduz.jarvis.nba.statsheets.Statsheet;
 import com.cemgunduz.jarvis.nba.statsheets.StatsheetType;
 
@@ -14,7 +15,13 @@ public class BasketballPlayer {
     private String name;
     private Position position;
 
+    private Status status = Status.AVAILABLE;
+
     private Map<StatsheetType, Statsheet> statsheetMap = new HashMap<>();
+
+    private String teamId;
+    private String teamName;
+    private String nbaTeamName;
 
     public BasketballPlayer() {
 
@@ -48,6 +55,38 @@ public class BasketballPlayer {
     public void setSheet(Statsheet statsheet, StatsheetType statsheetType)
     {
         statsheetMap.put(statsheetType, statsheet);
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getNbaTeamName() {
+        return nbaTeamName;
+    }
+
+    public void setNbaTeamName(String nbaTeamName) {
+        this.nbaTeamName = nbaTeamName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
     @Override

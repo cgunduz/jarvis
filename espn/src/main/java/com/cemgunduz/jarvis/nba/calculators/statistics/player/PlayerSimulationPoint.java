@@ -9,6 +9,7 @@ public class PlayerSimulationPoint {
 
     private PlayerReport playerReport;
     private int points;
+    private int participation = 0;
 
     public PlayerSimulationPoint(PlayerReport playerReport) {
         this.playerReport = playerReport;
@@ -25,6 +26,27 @@ public class PlayerSimulationPoint {
     public String getPlayerName()
     {
         return playerReport.getPlayerName();
+    }
+
+    public int getParticipation() {
+        return participation;
+    }
+
+    public void incrementParticipation()
+    {
+        participation++;
+    }
+
+    public Double getRealPoints()
+    {
+        if(participation == 0) return 0.0;
+
+        return (double)points / (double)participation;
+    }
+
+    public int getEspnRanking()
+    {
+        return playerReport.espnRankings;
     }
 
     @Override

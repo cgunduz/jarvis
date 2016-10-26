@@ -13,7 +13,7 @@ import java.util.*;
 public class RandomTeamStatistics {
 
     private static final int TEAM_COUNT = 8;
-    private static final int PLAYER_MAX_DRAFT_NUMBER = 105;
+    private static final int PLAYER_MAX_DRAFT_NUMBER = 150;
 
     List<PlayerReport> playerReports;
     private StatisticalPlayerTeam[] playerTeams = new StatisticalPlayerTeam[TEAM_COUNT];
@@ -28,7 +28,7 @@ public class RandomTeamStatistics {
         {
             double minutes = playerReport.getGamesPlayed();
             playerReport.setTotalValue( playerReport.getTotalValue() * minutes / 82);
-            playerReport.espnRankings = order;
+            //playerReport.espnRankings = order;
             order++;
         }
 
@@ -63,7 +63,7 @@ public class RandomTeamStatistics {
         {
             for(int j = 0; j < TEAM_COUNT; j++)
             {
-                int randomNum = random.nextInt(20 > copyList.size() ? copyList.size() : 20);
+                int randomNum = random.nextInt(25 > copyList.size() ? copyList.size() : 25);
                 playerTeams[j].addPlayer(copyList.get(randomNum));
 
                 copyList.remove(randomNum);
