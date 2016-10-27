@@ -22,9 +22,7 @@ public class TeamReportCompiler {
         List<BasketballPlayer> playerList = playerStatsheetScraper.scrapePlayerSheets();
 
         League league = new League(
-                playerList.stream().filter(basketballPlayer ->
-                        !basketballPlayer.getTeamName().equals("FA") &&
-                        !basketballPlayer.getTeamName().contains("WA")).collect(Collectors.toList())
+                playerList
                 , true
         );
 
@@ -54,31 +52,50 @@ public class TeamReportCompiler {
 
             double team1Value = team1.getPlayerTeam().getTeamCumulativeBy(stat);
             double team2Value = team2.getPlayerTeam().getTeamCumulativeBy(stat);
-            if(team1Value > team2Value)
+            compare(team1, team2, team1Value, team2Value);
+        }
+
+        double fgVal1 = team1.getPlayerTeam().getTeamCumulativeForFG();
+        double fgVal2 = team2.getPlayerTeam().getTeamCumulativeForFG();
+
+        double ftVal1 = team1.getPlayerTeam().getTeamCumulativeForFT();
+        double ftVal2 = team2.getPlayerTeam().getTeamCumulativeForFT();
+
+        compare(team1, team2, fgVal1, fgVal2);
+        compare(team1, team2, ftVal1, ftVal2);
+    }
+
+    private void compare(ReportablePlayerTeam team1, ReportablePlayerTeam team2,
+                         Double team1Value, Double team2Value)
+    {
+        // TODO : Factor in a better gap
+        double gap = 0.1;
+
+        if(team1Value > team2Value)
+        {
+            team1.incrementPoints(0.6);
+            if(team1Value * (1 - gap ) > team2Value)
             {
-                team1.incrementPoints(0.6);
-                if(team1Value * (1 - gap ) > team2Value)
-                {
-                    team1.incrementPoints(0.4);
-                }
-                else
-                {
-                    team2.incrementPoints(0.4);
-                }
+                team1.incrementPoints(0.4);
             }
             else
             {
-                team2.incrementPoints(0.6);
-                if(team2Value * (1 - gap ) > team1Value)
-                {
-                    team2.incrementPoints(0.4);
-                }
-                else
-                {
-                    team1.incrementPoints(0.4);
-                }
+                team2.incrementPoints(0.4);
             }
-
         }
+        else
+        {
+            team2.incrementPoints(0.6);
+            if(team2Value * (1 - gap ) > team1Value)
+            {
+                team2.incrementPoints(0.4);
+            }
+            else
+            {
+                team1.incrementPoints(0.4);
+            }
+        }
+
+
     }
 }

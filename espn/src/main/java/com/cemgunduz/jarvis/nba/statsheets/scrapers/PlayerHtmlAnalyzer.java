@@ -55,37 +55,37 @@ public class PlayerHtmlAnalyzer {
 
     public Double getThreePointers()
     {
-        return getAttribute(12);
+        return getAttribute(13);
     }
 
     public Double getRebounds()
     {
-        return getAttribute(13);
+        return getAttribute(14);
     }
 
     public Double getAsists()
     {
-        return getAttribute(14);
+        return getAttribute(15);
     }
 
     public Double getSteals()
     {
-        return getAttribute(15);
+        return getAttribute(16);
     }
 
     public Double getBlocks()
     {
-        return getAttribute(16);
+        return getAttribute(17);
     }
 
     public Double getTurnovers()
     {
-        return getAttribute(17);
+        return getAttribute(18);
     }
 
     public Double getPoints()
     {
-        return getAttribute(18);
+        return getAttribute(19);
     }
 
     public Double getFgMissed()

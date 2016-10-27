@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by cem on 05/09/16.
  */
 public class League {
 
+    private List<BasketballPlayer> trainingRelatedBasketballPlayers;
     private List<BasketballPlayer> basketballPlayers;
     private int leagueSize;
     private PlayerValueCalculator playerValueCalculator;
@@ -27,9 +29,13 @@ public class League {
     }
 
     public League(List<BasketballPlayer> basketballPlayers, boolean autoCalculate) {
+        this.trainingRelatedBasketballPlayers = basketballPlayers;
         this.basketballPlayers = basketballPlayers;
         if (!autoCalculate) return;
 
+        this.basketballPlayers = trainingRelatedBasketballPlayers.stream().filter(basketballPlayer ->
+                !basketballPlayer.getTeamName().equals("FA") &&
+                        !basketballPlayer.getTeamName().contains("WA")).collect(Collectors.toList());
         this.leagueSize = findAmountOfTeams();
         this.playerValueCalculator = new PlayerValueCalculator(
                 new SimpleStatValueCalculator(), this);
@@ -72,7 +78,7 @@ public class League {
     {
         List<Statsheet> result = new ArrayList<>();
 
-        for(BasketballPlayer basketballPlayer : basketballPlayers)
+        for(BasketballPlayer basketballPlayer : trainingRelatedBasketballPlayers)
         {
             result.add(basketballPlayer.getSheet(statsheetType));
         }

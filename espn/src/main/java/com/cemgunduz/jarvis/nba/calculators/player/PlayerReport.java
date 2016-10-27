@@ -117,6 +117,12 @@ public class PlayerReport {
         stringBuilder.append(getTotalValue());
         stringBuilder.append("\n");
         stringBuilder.append(statMap);
+        stringBuilder.append("\n");
+        stringBuilder.append("FG : ".concat(String.valueOf(
+                statMap.get(Stat.FGS) + statMap.get(Stat.FGM))));
+        stringBuilder.append("\n");
+        stringBuilder.append("FT : ".concat(String.valueOf(
+                statMap.get(Stat.FTS) + statMap.get(Stat.FTM))));
 
         return stringBuilder.toString();
     }

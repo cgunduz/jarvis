@@ -5,6 +5,7 @@ import com.cemgunduz.jarvis.nba.calculators.player.PlayerReport;
 import com.cemgunduz.jarvis.nba.calculators.stat.Stat;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -97,6 +98,16 @@ public class PlayerTeam {
 
         stringBuilder.append(" PLAYERS : ");
         stringBuilder.append(newLine());
+
+        playerReports.sort(new Comparator<PlayerReport>() {
+
+            @Override
+            public int compare(PlayerReport o1, PlayerReport o2) {
+
+                if(o1.getTotalValue() == o2.getTotalValue()) return 0;
+                return o1.getTotalValue() > o2.getTotalValue() ? -1 : 1;
+            }
+        });
         for(PlayerReport playerReport : playerReports)
         {
             stringBuilder.append(playerReport.toString());
