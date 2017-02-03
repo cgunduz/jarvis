@@ -1,4 +1,7 @@
 #!/bin/bash
+
+apt-get update
+
 echo 'installing & starting postfix'
 apt install postfix
 cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf
@@ -21,7 +24,7 @@ apt-get install default-jdk
 
 for directoryName in */
 do
-    mvn clean install -f $directoryName/pom.xml
+    mvn clean install -f $directoryName/pom.xml -Dmaven.test.skip=true
 done
 
 microservices = ("registry" "configuration" "gateway" "publisher" "news-reader" "espn" "scheduler" "communicator")
