@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
  * Created by cem on 25/10/16.
  */
 
+// TODO : Also replicated needs to be removed
 @RefreshScope
 @Configuration
 public class GlobalConfiguration {

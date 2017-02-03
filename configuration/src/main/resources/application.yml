@@ -6,7 +6,7 @@ spring:
     config:
       server:
         git:
-          uri: /Users/cem/Developer/Workspace/ms-test-related/configrepo
+          uri: ${CONFIG_REPO_LOCATION:/Users/cem/Developer/Workspace/ms-test-related/configrepo}
 
 eureka:
   instance:
