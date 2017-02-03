@@ -1,5 +1,6 @@
 package com.cemgunduz.jarvis;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -13,6 +14,7 @@ import com.cemgunduz.jarvis.reader.eksisozluk.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = NewsReaderApplication.class)
+@Ignore
 public class EksiSozlukScraperTest {
 
     @Test

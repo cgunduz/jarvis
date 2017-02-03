@@ -4,6 +4,7 @@ import com.cemgunduz.jarvis.communicatior.communicatee.Communicatee;
 import com.cemgunduz.jarvis.communicatior.communicatee.CommunicateeDao;
 import com.cemgunduz.jarvis.communicatior.people.People;
 import com.cemgunduz.jarvis.communicatior.people.Priority;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CommunicatorApplication.class)
+@Ignore
 public class TestData {
 
     @Autowired
