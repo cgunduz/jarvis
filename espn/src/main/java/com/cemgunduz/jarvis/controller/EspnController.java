@@ -37,7 +37,7 @@ public class EspnController {
     @Autowired
     private MailConfiguration mailConfiguration;
 
-    @RequestMapping("/dailyReport")
+    @RequestMapping("/players")
     public void dailyLeagueReport()
     {
         SeasonReportCompiler seasonReportCompiler = new SeasonReportCompiler();
@@ -55,7 +55,7 @@ public class EspnController {
         sendMail(emailInput);
     }
 
-    @RequestMapping("/dailyTeamReport")
+    @RequestMapping("/teams")
     public void dailTeamReport()
     {
         TeamReportCompiler teamReportCompiler = new TeamReportCompiler();

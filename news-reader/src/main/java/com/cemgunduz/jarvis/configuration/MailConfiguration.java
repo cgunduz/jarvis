@@ -14,11 +14,11 @@ import java.util.Set;
 @Configuration
 public class MailConfiguration {
 
-    @Value("${broadcast.address}")
-    private String from;
+    //@Value("${broadcast.address}")
+    private String from = "alert@jarvis.com";
 
-    @Value("${broadcast.recipients}")
-    private String to;
+    //@Value("${broadcast.recipients}")
+    private String to = "dogancemgunduz@gmail.com, zeyneptunalioglu@gmail.com";
 
     public String getFrom() {
         return from;
