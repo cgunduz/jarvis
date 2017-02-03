@@ -6,9 +6,9 @@ package com.cemgunduz.jarvis.nba.statsheets;
 public enum StatsheetType {
 
     // TODO : Read from configuration
-    PREVIOUS_YEAR(0.15, "lastSeason"), PROJECTIONS(0.85, "projections"),
-    LAST_30(0.0, "last30"), LAST_15(0.0, "last15"), LAST_7(0.0, "last7"),
-    THIS_YEAR(0.0, "currSeason");
+    PREVIOUS_YEAR(0.05, "lastSeason"), PROJECTIONS(0.10, "projections"),
+    LAST_30(0.35, "last30"), LAST_15(0.15, "last15"), LAST_7(0.05, "last7"),
+    THIS_YEAR(0.30, "currSeason");
 
     private double weight;
     private String webName;

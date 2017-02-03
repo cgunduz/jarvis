@@ -13,10 +13,10 @@ public enum Stat {
     REB(true, 1, false),
     TUR(false, 1, false),
     PTS(true, 1, false),
-    FGM(false, 7, true),
-    FGS(true, 7, true),
-    FTM(false, 2.4, true),
-    FTS(true, 2.4, true);
+    FGM(false, 5.1, true),
+    FGS(true, 5.1, true),
+    FTM(false, 1.9, true),
+    FTS(true, 1.9, true);
 
     private boolean positive;
     private double quantifier;

@@ -69,7 +69,7 @@ public class TeamReportCompiler {
                          Double team1Value, Double team2Value)
     {
         // TODO : Factor in a better gap
-        double gap = 0.1;
+        double gap = 0.05;
 
         if(team1Value > team2Value)
         {

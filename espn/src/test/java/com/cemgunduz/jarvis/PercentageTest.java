@@ -8,6 +8,7 @@ import com.cemgunduz.jarvis.nba.calculators.stat.SimpleStatValueCalculator;
 import com.cemgunduz.jarvis.nba.calculators.stat.Stat;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PlayerStatsheetScraper;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PreSeasonStatsheetScraper;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.SeasonStatsheetScraper;
 import org.junit.Test;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class PercentageTest {
     @Test
     public void percentages()
     {
-        PlayerStatsheetScraper playerStatsheetScraper = new PreSeasonStatsheetScraper();
+        PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper();
         List<BasketballPlayer> playerList = playerStatsheetScraper.scrapePlayerSheets();
 
         League league = new League(playerList);
