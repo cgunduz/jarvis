@@ -5,6 +5,9 @@ import com.cemgunduz.jarvis.nba.calculators.report.Reporter;
 import com.cemgunduz.jarvis.nba.calculators.team.ReportablePlayerTeam;
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -15,6 +18,7 @@ public class TeamTest {
     @Test
     public void notReallyATest() {
 
+        Deque deque;
         TeamReportCompiler teamReportCompiler = new TeamReportCompiler();
         List<ReportablePlayerTeam> teamReports = teamReportCompiler.compile();
 

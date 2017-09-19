@@ -15,12 +15,21 @@ public class PlayerReport {
     private BasketballPlayer basketballPlayer;
     private Map<Stat, Double> statMap = new HashMap<>();
     private double totalValue;
+    private double estimatedAuctionValue;
 
     // TODO : Find a diff solution
     public int espnRankings;
 
     public PlayerReport(BasketballPlayer basketballPlayer) {
         this.basketballPlayer = basketballPlayer;
+    }
+
+    public double getEstimatedAuctionValue() {
+        return estimatedAuctionValue;
+    }
+
+    public void setEstimatedAuctionValue(double estimatedAuctionValue) {
+        this.estimatedAuctionValue = estimatedAuctionValue;
     }
 
     public void addValue(Stat stat, Double value)

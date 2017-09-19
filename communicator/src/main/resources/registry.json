@@ -1,0 +1,19 @@
+{
+  "instance": {
+    "hostName": "127.0.0.1",
+    "app": "com.automationrhapsody.eureka.app",
+    "vipAddress": "com.automationrhapsody.eureka.app",
+    "secureVipAddress": "com.automationrhapsody.eureka.app",
+    "ipAddr": "127.0.0.1",
+    "status": "STARTING",
+    "port": {"$": "8010", "@enabled": "true"},
+    "securePort": {"$": "8443", "@enabled": "true"},
+    "healthCheckUrl": "http://127.0.0.1:8010/healthcheck",
+    "statusPageUrl": "http://127.0.0.1:8010/status",
+    "homePageUrl": "http://127.0.0.1:8010",
+    "dataCenterInfo": {
+      "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+      "name": "MyOwn"
+    }
+  }
+}

@@ -8,7 +8,6 @@ import com.cemgunduz.jarvis.nba.calculators.stat.SimpleStatValueCalculator;
 import com.cemgunduz.jarvis.nba.calculators.stat.Stat;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PlayerStatsheetScraper;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PreSeasonStatsheetScraper;
-import org.springframework.stereotype.Repository;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +16,11 @@ import java.util.List;
  * Created by cem on 20/09/16.
  */
 public class PreSeasonReportCompiler {
+
+    private int AUCTION_SIZE = 8;
+    private int TOTAL_AUCTIONABLE_PER_TEAM = 12;
+    private int TOTAL_AUCTION_MONEY = 1600;
+
 
     public List<PlayerReport> compile()
     {
@@ -31,10 +35,12 @@ public class PreSeasonReportCompiler {
         List<PlayerReport> playerReports = playerValueCalculator.calculate();
 
         int order = 1;
+        double allValues = 0.0;
         for(PlayerReport playerReport : playerReports)
         {
             double minutes = playerReport.getGamesPlayed();
             playerReport.setTotalValue( playerReport.getTotalValue() * minutes / 82);
+            allValues+= playerReport.getTotalValue();
             playerReport.espnRankings = order;
             order++;
         }
@@ -47,6 +53,11 @@ public class PreSeasonReportCompiler {
                 return o1.getTotalValue() > o2.getTotalValue() ? -1 : 1;
             }
         });
+
+        final double anchor = playerReports.get(AUCTION_SIZE * TOTAL_AUCTIONABLE_PER_TEAM).getTotalValue();
+
+        final double allVals = allValues - anchor * playerReports.size();
+        playerReports.stream().forEach(item -> item.setEstimatedAuctionValue(TOTAL_AUCTION_MONEY*((item.getTotalValue()-anchor)/allVals)));
 
         return playerReports;
     }

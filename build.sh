@@ -30,4 +30,5 @@ done
 microservices = ("registry" "configuration" "gateway" "publisher" "news-reader" "espn" "scheduler" "communicator")
 for ms in microservices
 do
-    java -jar $directoryName/target/
+    mvn spring-boot:run -f $directoryName/pom.xml -Dmaven.test.skip=true &
+done
