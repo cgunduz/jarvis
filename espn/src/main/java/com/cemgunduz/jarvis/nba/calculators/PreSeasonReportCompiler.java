@@ -18,7 +18,7 @@ import java.util.List;
 public class PreSeasonReportCompiler {
 
     private int AUCTION_SIZE = 8;
-    private int TOTAL_AUCTIONABLE_PER_TEAM = 12;
+    private int TOTAL_AUCTIONABLE_PER_TEAM = 11;
     private int TOTAL_AUCTION_MONEY = 1600;
 
 
@@ -35,12 +35,10 @@ public class PreSeasonReportCompiler {
         List<PlayerReport> playerReports = playerValueCalculator.calculate();
 
         int order = 1;
-        double allValues = 0.0;
         for(PlayerReport playerReport : playerReports)
         {
             double minutes = playerReport.getGamesPlayed();
             playerReport.setTotalValue( playerReport.getTotalValue() * minutes / 82);
-            allValues+= playerReport.getTotalValue();
             playerReport.espnRankings = order;
             order++;
         }
@@ -56,8 +54,15 @@ public class PreSeasonReportCompiler {
 
         final double anchor = playerReports.get(AUCTION_SIZE * TOTAL_AUCTIONABLE_PER_TEAM).getTotalValue();
 
-        final double allVals = allValues - anchor * playerReports.size();
-        playerReports.stream().forEach(item -> item.setEstimatedAuctionValue(TOTAL_AUCTION_MONEY*((item.getTotalValue()-anchor)/allVals)));
+        double allValues = 0.0;
+        for(int i  = 0; i<TOTAL_AUCTIONABLE_PER_TEAM * AUCTION_SIZE; i++)
+        {
+            allValues+=playerReports.get(i).getTotalValue();
+        }
+
+        final double allValuesWithAnchor = allValues - anchor * TOTAL_AUCTIONABLE_PER_TEAM * AUCTION_SIZE;
+
+        playerReports.stream().forEach(player -> player.setEstimatedAuctionValue(TOTAL_AUCTION_MONEY*((player.getTotalValue()-anchor)/allValuesWithAnchor)));
 
         return playerReports;
     }
