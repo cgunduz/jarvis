@@ -23,7 +23,7 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
 
     private static final String LEAGUE_PLAYER_URL =
             "http://games.espn.com/fba/freeagency?leagueId=142666&" +
-                    "teamId=3&seasonId=2017&avail=-1&startIndex=$START_INDEX&version=$SHEET_TYPE";
+                    "teamId=3&seasonId=2018&avail=-1&startIndex=$START_INDEX&version=$SHEET_TYPE";
 
     @Autowired
     GlobalConfiguration globalConfiguration;

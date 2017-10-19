@@ -19,7 +19,7 @@ public class PreSeasonReportCompiler {
 
     private int AUCTION_SIZE = 8;
     private int TOTAL_AUCTIONABLE_PER_TEAM = 11;
-    private int TOTAL_AUCTION_MONEY = 1600;
+    private int TOTAL_AUCTION_MONEY = 200 * AUCTION_SIZE;
 
 
     public List<PlayerReport> compile()

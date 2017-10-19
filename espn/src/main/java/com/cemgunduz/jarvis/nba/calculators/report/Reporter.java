@@ -23,7 +23,7 @@ public class Reporter {
         {
             addLine(String.valueOf(rank).concat(". ").concat(playerReport.getPlayerName())
                     .concat(" - ").concat(String.valueOf(playerReport.espnRankings))
-                    .concat(" - ").concat(String.valueOf(playerReport.getEstimatedAuctionValue())));
+                    .concat(" - ").concat(String.valueOf(playerReport.getTotalValue())));
             addLine(String.valueOf(playerReport.getTotalValue()));
             addLine(playerReport.getStatMap().toString());
             try
