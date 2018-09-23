@@ -3,6 +3,10 @@ package com.cemgunduz.jarvis.nba.statsheets.scrapers;
 import com.cemgunduz.jarvis.nba.BasketballPlayer;
 import com.cemgunduz.jarvis.nba.statsheets.Statsheet;
 import com.cemgunduz.jarvis.nba.statsheets.StatsheetType;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.models.EspnPlayer;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.models.Players;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.models.Stat;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,6 +14,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,82 +23,89 @@ import java.util.List;
 public class PreSeasonStatsheetScraper implements PlayerStatsheetScraper {
 
     private static final String ESPN_PROJECTIONS =
-            "http://games.espn.com/fba/tools/projections?display=alt&startIndex=$START_INDEX";
+            "http://fantasy.espn.com/apis/v3/games/fba/seasons/2019/segments/0/leaguedefaults/1?view=kona_player_info";
+
+    private static final String weirdHeader = "{\"players\":{\"filterStatsForSplitTypeIds\":{\"value\":[0]},\"filterStatsForSourceIds\":{\"value\":[1]},\"sortDraftRanks\":{\"sortPriority\":2,\"sortAsc\":true,\"value\":\"STANDARD\"},\"sortPercOwned\":{\"sortPriority\":1,\"sortAsc\":false},\"filterSlotIds\":{\"value\":[0,1,2,3,4,5,6,7,8,9,10,11]},\"limit\":300,\"offset\":0,\"filterStatsForTopScoringPeriodIds\":{\"value\":20,\"additionalValue\":[\"002019\",\"102019\",\"002018\",\"012019\",\"022019\",\"032019\",\"042019\"]}}}";
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public List<BasketballPlayer> scrapePlayerSheets() {
 
-        int startIndex = 0;
         List<BasketballPlayer> result = new ArrayList<>();
 
-        for(int i = 0; i < 10; i++)
-        {
-            String url = ESPN_PROJECTIONS.replace("$START_INDEX", String.valueOf(startIndex));
-            Document doc = null;
-            try {
-                doc = Jsoup.connect(url).timeout(100000).get();
-            } catch (IOException e) {
-                e.printStackTrace();
+        Document doc = null;
+        Players mappedJson = null;
+        try {
+            doc = Jsoup.connect(ESPN_PROJECTIONS)
+                    .timeout(100000)
+                    .ignoreContentType(true)
+                    .header("X-Fantasy-Filter", weirdHeader)
+                    .get();
+
+            String json = doc.text();
+            mappedJson = new ObjectMapper().readValue(json, Players.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (EspnPlayer espnPlayer: mappedJson.getPlayers()) {
+            BasketballPlayer basketballPlayer = new BasketballPlayer();
+            basketballPlayer.setName(espnPlayer.getPlayer().getFullName());
+
+            // TODO : Get the position
+
+            if(espnPlayer.getPlayer().getStats() == null ||
+                    espnPlayer.getPlayer().getStats().size() == 0){
+                continue;
             }
 
-            Elements players = doc.getElementsByClass("games-fullcol").get(0).getElementsByTag("table");
+            Stat previousYearStats = espnPlayer.getPlayer().getStats().get(
+                    espnPlayer.getPlayer().getStats().size() == 1 ? 0 : 1
+            );
 
-            for(Element player : players)
-            {
-                BasketballPlayer basketballPlayer = new BasketballPlayer();
-                basketballPlayer.setName(player.getElementsByTag("a").get(0).text());
+            Stat projectionStats = espnPlayer.getPlayer().getStats().get(0);
 
-                // TODO : Get the position
+            basketballPlayer.setSheet(
+                    statsheetByLine(previousYearStats), StatsheetType.PREVIOUS_YEAR
+            );
 
-                Element previousYearStats = player.getElementsByTag("tr").get(1);
-                Element projectionStats = player.getElementsByTag("tr").get(2);
+            basketballPlayer.setSheet(
+                    statsheetByLine(projectionStats), StatsheetType.PROJECTIONS
+            );
 
-                basketballPlayer.setSheet(
-                        statsheetByLine(previousYearStats), StatsheetType.PREVIOUS_YEAR
-                );
-
-                basketballPlayer.setSheet(
-                        statsheetByLine(projectionStats), StatsheetType.PROJECTIONS
-                );
-
-                result.add(basketballPlayer);
-            }
-
-            startIndex += 15;
+            result.add(basketballPlayer);
         }
 
         return result;
     }
 
-    private Statsheet statsheetByLine(Element line)
-    {
-        String gamesPlayed = line.getElementsByClass("playertableStat").get(0).text();
-        if(gamesPlayed.equals("--"))
+    private Statsheet statsheetByLine(Stat stat) {
+
+        Double gamesPlayed = stat.extractStat(42);
+        if (gamesPlayed.equals(0.0))
             return null;
 
         Statsheet statsheet = new Statsheet();
-        statsheet.setGamesPlayed(
-                Integer.valueOf(gamesPlayed)
-        );
+        statsheet.setGamesPlayed( gamesPlayed.intValue() );
 
-        statsheet.setMinutes(extractStats(line, 1));
-        statsheet.setFgPercentage(extractStats(line, 2));
-        statsheet.setFtPercentage(extractStats(line,3));
-        statsheet.setThreePointers(extractStats(line,4));
-        statsheet.setRebounds(extractStats(line,5));
-        statsheet.setAssists(extractStats(line,6));
-        statsheet.setSteals(extractStats(line,8));
-        statsheet.setBlocks(extractStats(line,9));
-        statsheet.setTurnovers(extractStats(line,10));
-        statsheet.setPoints(extractStats(line,11));
+        statsheet.setMinutes(stat.extractStat(40));
+        statsheet.setFgPercentage(stat.extractStat(19));
+        statsheet.setFtPercentage(stat.extractStat(20));
+        statsheet.setThreePointers(stat.extractStat(17));
+        statsheet.setRebounds(stat.extractStat(6));
+        statsheet.setAssists(stat.extractStat(3));
+        statsheet.setSteals(stat.extractStat(2));
+        statsheet.setBlocks(stat.extractStat(1));
+        statsheet.setTurnovers(stat.extractStat(11));
+        statsheet.setPoints(stat.extractStat(0));
 
         statsheet.precentagePredictor();
 
         return statsheet;
     }
 
-    private double extractStats(Element line, int statNo)
-    {
+    private double extractStats(Element line, int statNo) {
         return Double.valueOf(line.getElementsByClass("playertableStat").get(statNo).text());
     }
 }

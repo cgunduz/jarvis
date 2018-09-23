@@ -21,7 +21,7 @@ public class PercentageTest {
     @Test
     public void percentages()
     {
-        PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper();
+        PreSeasonStatsheetScraper playerStatsheetScraper = new PreSeasonStatsheetScraper();
         List<BasketballPlayer> playerList = playerStatsheetScraper.scrapePlayerSheets();
 
         League league = new League(playerList);
