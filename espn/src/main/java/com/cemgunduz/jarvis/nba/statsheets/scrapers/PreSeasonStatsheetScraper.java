@@ -40,6 +40,7 @@ public class PreSeasonStatsheetScraper implements PlayerStatsheetScraper {
             doc = Jsoup.connect(ESPN_PROJECTIONS)
                     .timeout(100000)
                     .ignoreContentType(true)
+                    .maxBodySize(0)
                     .header("X-Fantasy-Filter", weirdHeader)
                     .get();
 
