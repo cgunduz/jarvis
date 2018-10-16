@@ -34,7 +34,8 @@ public class PlayerValueCalculator {
         for(StatsheetType statsheetType : StatsheetType.values())
         {
             // Player has not performed in this category, correct the calculations
-            if(basketballPlayer.getSheet(statsheetType) == null)
+            if(basketballPlayer.getSheet(statsheetType) == null ||
+                    basketballPlayer.getSheet(statsheetType).getGamesPlayed() == 0)
             {
                 quantifier += statsheetType.getWeight();
                 continue;

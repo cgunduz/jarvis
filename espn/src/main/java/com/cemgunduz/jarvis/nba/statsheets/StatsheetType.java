@@ -11,7 +11,11 @@ public enum StatsheetType {
 //    LAST_30(0.35, "last30"), LAST_15(0.15, "last15"), LAST_7(0.05, "last7"),
 //    THIS_YEAR(0.30, "currSeason");
 
-    PREVIOUS_YEAR(0.10, "lastSeason"), PROJECTIONS(0.90, "projections");
+    PREVIOUS_YEAR(0.01, "lastSeason"), PROJECTIONS(1.0, "projections"),
+    LAST_30(0.01, "last30"), LAST_15(0.01, "last15"), LAST_7(0.01, "last7"),
+    THIS_YEAR(0.01, "currSeason");
+
+    //PREVIOUS_YEAR(0.10, "lastSeason"), PROJECTIONS(0.90, "projections");
 
     private double weight;
     private String webName;

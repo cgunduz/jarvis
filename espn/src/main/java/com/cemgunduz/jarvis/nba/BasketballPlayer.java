@@ -16,6 +16,7 @@ public class BasketballPlayer {
     private Position position;
 
     private Status status = Status.AVAILABLE;
+    private boolean freeAgent;
 
     private Map<StatsheetType, Statsheet> statsheetMap = new HashMap<>();
 
@@ -87,6 +88,14 @@ public class BasketballPlayer {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public boolean isFreeAgent() {
+        return freeAgent;
+    }
+
+    public void setFreeAgent(boolean freeAgent) {
+        this.freeAgent = freeAgent;
     }
 
     @Override

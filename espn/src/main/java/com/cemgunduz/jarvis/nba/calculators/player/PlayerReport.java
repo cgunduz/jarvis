@@ -90,9 +90,7 @@ public class PlayerReport {
     }
 
     public Boolean isAvailable() {
-        // TODO : Dirty hack
-        return basketballPlayer.getTeamName().equals("FA") ||
-                basketballPlayer.getTeamName().contains("WA");
+        return basketballPlayer.isFreeAgent();
     }
 
     public int getGamesPlayed() {

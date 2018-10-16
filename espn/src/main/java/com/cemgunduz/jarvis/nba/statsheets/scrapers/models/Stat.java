@@ -9,6 +9,7 @@ public class Stat {
 
     Map<Integer, Double> averageStats;
     Integer seasonId;
+    String id;
 
     public Map<Integer, Double> getAverageStats() {
         return averageStats;
@@ -24,6 +25,14 @@ public class Stat {
 
     public void setSeasonId(Integer seasonId) {
         this.seasonId = seasonId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Double extractStat(int location){

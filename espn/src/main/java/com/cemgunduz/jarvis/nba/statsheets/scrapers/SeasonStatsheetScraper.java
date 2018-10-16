@@ -6,6 +6,10 @@ import com.cemgunduz.jarvis.nba.Position;
 import com.cemgunduz.jarvis.nba.calculators.player.Status;
 import com.cemgunduz.jarvis.nba.statsheets.Statsheet;
 import com.cemgunduz.jarvis.nba.statsheets.StatsheetType;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.models.EspnPlayer;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.models.Players;
+import com.cemgunduz.jarvis.nba.statsheets.scrapers.models.Stat;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,9 +25,9 @@ import java.util.List;
  */
 public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
 
+    // TODO : Legaue id changes per team
     private static final String LEAGUE_PLAYER_URL =
-            "http://games.espn.com/fba/freeagency?leagueId=142666&" +
-                    "teamId=3&seasonId=2018&avail=-1&startIndex=$START_INDEX&version=$SHEET_TYPE";
+            "http://fantasy.espn.com/apis/v3/games/fba/seasons/2019/segments/0/leagues/142666?scoringPeriodId=1&view=kona_player_info";
 
     @Autowired
     GlobalConfiguration globalConfiguration;
@@ -37,99 +41,109 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
         if(globalConfiguration == null)
             globalConfiguration = new GlobalConfiguration();
 
-        List<BasketballPlayer> basketballPlayers = new ArrayList<>();
+        List<BasketballPlayer> result = new ArrayList<>();
 
-        // Make a for each statsheet check here
-        for(StatsheetType sheetType : StatsheetType.values())
-        {
-            String espnUrl = LEAGUE_PLAYER_URL.replace("$SHEET_TYPE", sheetType.getWebName());
-            for(int startIndex = 0; startIndex < 300; startIndex+=50)
-            {
-                String url = espnUrl.replace("$START_INDEX", String.valueOf(startIndex));
+        Document doc = null;
+        Players mappedJson = null;
+        try {
+            doc = Jsoup.connect(LEAGUE_PLAYER_URL)
+                    .timeout(100000)
+                    .ignoreContentType(true)
+                    .maxBodySize(0)
+                    //.header("X-Fantasy-Filter", weirdHeader)
+                    .get();
 
-                Document doc = null;
-                try {
-                    String cookie = globalConfiguration.getCookie();
-                    doc = Jsoup.connect(url).timeout(100000).
-                            header("Cookie", globalConfiguration.getCookie()).get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            String json = doc.text();
+            mappedJson = new ObjectMapper().readValue(json, Players.class);
 
-                Elements playersHtml = doc.getElementsByClass("pncPlayerRow");
-                for(Element playerHtml : playersHtml)
-                {
-                    PlayerHtmlAnalyzer analyzer = new PlayerHtmlAnalyzer(playerHtml);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (EspnPlayer espnPlayer: mappedJson.getPlayers()) {
+            BasketballPlayer basketballPlayer = new BasketballPlayer();
+            basketballPlayer.setTeamId(String.valueOf(espnPlayer.getOnTeamId()));
+            basketballPlayer.setFreeAgent(espnPlayer.getStatus().equals("FREEAGENT"));
+            basketballPlayer.setName(espnPlayer.getPlayer().getFullName());
 
-                    String playerName = analyzer.getPlayerName();
-                    String nbaTeamName = analyzer.getNbaTeamName();
+            // TODO : Get the position
 
-                    String teamName = analyzer.getTeamName();
-                    if(!teamNames.contains(teamName))
-                        teamNames.add(teamName);
-
-                    String teamId = String.valueOf(teamNames.indexOf(teamName)+1);
-
-                    // TODO : Implement
-                    Position position = Position.getPositionByString("TO_BE_FILLED");
-
-                    Status status = analyzer.getStatus();
-
-                    BasketballPlayer basketballPlayer = new BasketballPlayer();
-                    basketballPlayer.setName(playerName);
-                    basketballPlayer.setPosition(position);
-                    basketballPlayer.setStatus(status);
-                    basketballPlayer.setTeamId(teamId);
-                    basketballPlayer.setNbaTeamName(nbaTeamName);
-                    basketballPlayer.setTeamName(teamName);
-
-                    if(basketballPlayers.contains(basketballPlayer))
-                    {
-                        basketballPlayer = basketballPlayers.get(
-                                basketballPlayers.indexOf(basketballPlayer)
-                        );
-                    }
-                    else
-                    {
-                        basketballPlayers.add(basketballPlayer);
-                    }
-
-                    Statsheet statsheet = new Statsheet();
-                    statsheet.setMinutes(analyzer.getMinutes());
-                    statsheet.setThreePointers(analyzer.getThreePointers());
-                    statsheet.setAssists(analyzer.getAsists());
-                    statsheet.setBlocks(analyzer.getBlocks());
-                    statsheet.setPoints(analyzer.getPoints());
-                    statsheet.setRebounds(analyzer.getRebounds());
-                    statsheet.setSteals(analyzer.getSteals());
-                    statsheet.setTurnovers(analyzer.getTurnovers());
-
-                    statsheet.setFgAttempted(analyzer.getFgAttempted());
-                    statsheet.setFgMissed(analyzer.getFgMissed());
-                    statsheet.setFgScored(analyzer.getFgScored());
-                    statsheet.setFtAttempted(analyzer.getFtAttempted());
-                    statsheet.setFtMissed(analyzer.getFtMissed());
-                    statsheet.setFtScored(analyzer.getFtScored());
-
-                    if(statsheet.getFgAttempted().equals(0.0))
-                        statsheet.setFgPercentage(0.0);
-                    else
-                        statsheet.setFgPercentage(statsheet.getFgScored()/statsheet.getFgAttempted());
-
-                    if(statsheet.getFtAttempted().equals(0.0))
-                        statsheet.setFtPercentage(0.0);
-                    else
-                        statsheet.setFtPercentage(statsheet.getFtScored()/statsheet.getFtAttempted());
-
-                    // TODO : Add percentages
-
-                    basketballPlayer.setSheet(statsheet, sheetType);
-                }
+            if(espnPlayer.getPlayer().getStats() == null ||
+                    espnPlayer.getPlayer().getStats().size() == 0){
+                continue;
             }
+
+            // TODO : Needs to change this is fully wrong
+
+            for(Stat stat : espnPlayer.getPlayer().getStats()){
+
+                StatsheetType type = getById(stat.getId());
+                if(type == null) continue;
+
+                basketballPlayer.setSheet(statsheetByLine(stat), type);
+            }
+
+            result.add(basketballPlayer);
         }
 
+        return result;
+    }
 
+    private Statsheet statsheetByLine(Stat stat) {
 
-        return basketballPlayers;
+        if(stat == null) return null;
+
+        Double gamesPlayed = stat.extractStat(42);
+        if (gamesPlayed.equals(0.0))
+            return null;
+
+        Statsheet statsheet = new Statsheet();
+        statsheet.setGamesPlayed( gamesPlayed.intValue() );
+
+        statsheet.setMinutes(stat.extractStat(40));
+        statsheet.setFgPercentage(stat.extractStat(19));
+        statsheet.setFtPercentage(stat.extractStat(20));
+        statsheet.setThreePointers(stat.extractStat(17));
+        statsheet.setRebounds(stat.extractStat(6));
+        statsheet.setAssists(stat.extractStat(3));
+        statsheet.setSteals(stat.extractStat(2));
+        statsheet.setBlocks(stat.extractStat(1));
+        statsheet.setTurnovers(stat.extractStat(11));
+        statsheet.setPoints(stat.extractStat(0));
+
+        statsheet.precentagePredictor();
+
+        return statsheet;
+    }
+
+    // TODO : Just guessing here
+    private StatsheetType getById(String id){
+
+        switch(id) {
+            case "102019" :
+                // Statements
+                return StatsheetType.PROJECTIONS;
+
+            case "102018" :
+                // Statements
+                return StatsheetType.PREVIOUS_YEAR;
+
+            case "002019" :
+                // Statements
+                return StatsheetType.THIS_YEAR;
+
+            case "012019" :
+                // Statements
+                return StatsheetType.LAST_7;
+
+            case "022019" :
+                // Statements
+                return StatsheetType.LAST_15;
+
+            case "032019" :
+                // Statements
+                return StatsheetType.LAST_30;
+        }
+
+        return null;
     }
 }

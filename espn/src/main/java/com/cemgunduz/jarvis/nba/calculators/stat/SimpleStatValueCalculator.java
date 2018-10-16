@@ -22,7 +22,7 @@ public class SimpleStatValueCalculator implements StatValueCalculator {
             double pointsPerStat = 0;
             for(Statsheet statsheet : statsheets)
             {
-                if(statsheet == null) continue;
+                if(statsheet == null || statsheet.getGamesPlayed() == 0) continue;
                 Double val = statsheet.getByStatName(stat);
                 if(val != null ) statTotal += val;
             }

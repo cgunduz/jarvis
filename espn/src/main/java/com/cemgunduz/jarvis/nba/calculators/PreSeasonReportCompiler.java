@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class PreSeasonReportCompiler {
 
-    private int AUCTION_SIZE = 8;
-    private int TOTAL_AUCTIONABLE_PER_TEAM = 11;
+    private int AUCTION_SIZE = 12;
+    private int TOTAL_AUCTIONABLE_PER_TEAM = 12;
     private int TOTAL_AUCTION_MONEY = 200 * AUCTION_SIZE;
 
 
