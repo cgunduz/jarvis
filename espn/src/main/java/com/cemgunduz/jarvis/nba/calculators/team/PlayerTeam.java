@@ -38,7 +38,8 @@ public class PlayerTeam {
         Double result = 0.0;
         for(PlayerReport playerReport : playerReports)
         {
-            if(playerReport.isInjured()) continue;
+            if(playerReport.isInjured() || playerReport.getStatMap() == null ||
+                    !playerReport.getStatMap().containsKey(stat)) continue;
 
             result += playerReport.getStatMap().get(stat);
         }

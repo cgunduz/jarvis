@@ -18,7 +18,6 @@ public class TeamTest {
     @Test
     public void notReallyATest() {
 
-        Deque deque;
         TeamReportCompiler teamReportCompiler = new TeamReportCompiler();
         List<ReportablePlayerTeam> teamReports = teamReportCompiler.compile();
 

@@ -34,8 +34,7 @@ public class League {
         if (!autoCalculate) return;
 
         this.basketballPlayers = trainingRelatedBasketballPlayers.stream().filter(basketballPlayer ->
-                !basketballPlayer.getTeamName().equals("FA") &&
-                        !basketballPlayer.getTeamName().contains("WA")).collect(Collectors.toList());
+                !basketballPlayer.isFreeAgent()).collect(Collectors.toList());
         this.leagueSize = findAmountOfTeams();
         this.playerValueCalculator = new PlayerValueCalculator(
                 new SimpleStatValueCalculator(), this);

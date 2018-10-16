@@ -62,6 +62,7 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
         for (EspnPlayer espnPlayer: mappedJson.getPlayers()) {
             BasketballPlayer basketballPlayer = new BasketballPlayer();
             basketballPlayer.setTeamId(String.valueOf(espnPlayer.getOnTeamId()));
+            basketballPlayer.setTeamName(String.valueOf(espnPlayer.getOnTeamId()));
             basketballPlayer.setFreeAgent(espnPlayer.getStatus().equals("FREEAGENT"));
             basketballPlayer.setName(espnPlayer.getPlayer().getFullName());
 
