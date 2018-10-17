@@ -17,9 +17,15 @@ import java.util.stream.Collectors;
  */
 public class SeasonReportCompiler {
 
+    public SeasonReportCompiler(String leagueId) {
+        this.leagueId = leagueId;
+    }
+
+    private String leagueId;
+
     public List<PlayerReport> compile() {
 
-        PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper();
+        PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper(leagueId);
         List<BasketballPlayer> playerList = playerStatsheetScraper.scrapePlayerSheets();
 
         League league = new League(playerList);

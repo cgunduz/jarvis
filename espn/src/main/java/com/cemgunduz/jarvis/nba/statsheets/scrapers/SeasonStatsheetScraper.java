@@ -25,9 +25,15 @@ import java.util.List;
  */
 public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
 
+    public SeasonStatsheetScraper(String leagueId) {
+        this.leagueId = leagueId;
+    }
+
+    private String leagueId;
+
     // TODO : Legaue id changes per team
     private static final String LEAGUE_PLAYER_URL =
-            "http://fantasy.espn.com/apis/v3/games/fba/seasons/2019/segments/0/leagues/142666?scoringPeriodId=1&view=kona_player_info";
+            "http://fantasy.espn.com/apis/v3/games/fba/seasons/2019/segments/0/leagues/LEAGUE_ID_PLACEHOLDER?scoringPeriodId=1&view=kona_player_info";
 
     @Autowired
     GlobalConfiguration globalConfiguration;
@@ -41,15 +47,18 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
         if(globalConfiguration == null)
             globalConfiguration = new GlobalConfiguration();
 
+        String url = LEAGUE_PLAYER_URL.replace("LEAGUE_ID_PLACEHOLDER", leagueId);
+
         List<BasketballPlayer> result = new ArrayList<>();
 
         Document doc = null;
         Players mappedJson = null;
         try {
-            doc = Jsoup.connect(LEAGUE_PLAYER_URL)
+            doc = Jsoup.connect(url)
                     .timeout(100000)
                     .ignoreContentType(true)
                     .maxBodySize(0)
+                    .header("cookie", globalConfiguration.getCookie())
                     //.header("X-Fantasy-Filter", weirdHeader)
                     .get();
 
@@ -63,7 +72,8 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
             BasketballPlayer basketballPlayer = new BasketballPlayer();
             basketballPlayer.setTeamId(String.valueOf(espnPlayer.getOnTeamId()));
             basketballPlayer.setTeamName(String.valueOf(espnPlayer.getOnTeamId()));
-            basketballPlayer.setFreeAgent(espnPlayer.getStatus().equals("FREEAGENT"));
+            basketballPlayer.setFreeAgent(espnPlayer.getStatus().equals("FREEAGENT") ||
+                                            espnPlayer.getStatus().equals("WAIVERS"));
             basketballPlayer.setName(espnPlayer.getPlayer().getFullName());
 
             // TODO : Get the position

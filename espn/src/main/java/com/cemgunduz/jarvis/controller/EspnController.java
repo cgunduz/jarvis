@@ -4,6 +4,7 @@ import com.cemgunduz.jarvis.configuration.MailConfiguration;
 import com.cemgunduz.jarvis.configuration.ServerNames;
 import com.cemgunduz.jarvis.email.EmailInput;
 import com.cemgunduz.jarvis.email.EmailSendingResponse;
+import com.cemgunduz.jarvis.nba.League;
 import com.cemgunduz.jarvis.nba.calculators.SeasonReportCompiler;
 import com.cemgunduz.jarvis.nba.calculators.TeamReportCompiler;
 import com.cemgunduz.jarvis.nba.calculators.player.PlayerReport;
@@ -40,7 +41,7 @@ public class EspnController {
     @RequestMapping("/players")
     public void dailyLeagueReport()
     {
-        SeasonReportCompiler seasonReportCompiler = new SeasonReportCompiler();
+        SeasonReportCompiler seasonReportCompiler = new SeasonReportCompiler(League.SCUM_LEAGUE);
         List<PlayerReport> playerReports = seasonReportCompiler.compile();
 
         Reporter reporter = new Reporter();
@@ -58,7 +59,7 @@ public class EspnController {
     @RequestMapping("/teams")
     public void dailTeamReport()
     {
-        TeamReportCompiler teamReportCompiler = new TeamReportCompiler();
+        TeamReportCompiler teamReportCompiler = new TeamReportCompiler(League.SCUM_LEAGUE);
         List<ReportablePlayerTeam> teamReports = teamReportCompiler.compile();
 
         Reporter reporter = new Reporter();

@@ -1,6 +1,7 @@
 package com.cemgunduz.jarvis;
 
 import com.cemgunduz.jarvis.nba.BasketballPlayer;
+import com.cemgunduz.jarvis.nba.League;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PlayerStatsheetScraper;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.PreSeasonStatsheetScraper;
 import com.cemgunduz.jarvis.nba.statsheets.scrapers.SeasonStatsheetScraper;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class SeasonScraperTest {
 
-    PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper();
+    PlayerStatsheetScraper playerStatsheetScraper = new SeasonStatsheetScraper(League.SCUM_LEAGUE);
 
     @Test
     public void contextLoads() {

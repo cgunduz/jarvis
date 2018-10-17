@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
  */
 public class League {
 
+    public static final String SCUM_LEAGUE = "142666";
+    public static final String PARALEL_LEAGUE = "7051735";
+
     private List<BasketballPlayer> trainingRelatedBasketballPlayers;
     private List<BasketballPlayer> basketballPlayers;
     private int leagueSize;
