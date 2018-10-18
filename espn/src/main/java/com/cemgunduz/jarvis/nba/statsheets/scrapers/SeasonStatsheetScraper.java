@@ -111,8 +111,17 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
         statsheet.setGamesPlayed( gamesPlayed.intValue() );
 
         statsheet.setMinutes(stat.extractStat(40));
+
         statsheet.setFgPercentage(stat.extractStat(19));
+        statsheet.setFgScored(stat.extractStat(13));
+        statsheet.setFgMissed(stat.extractStat(14));
+        statsheet.setFgAttempted(statsheet.getFgScored() + statsheet.getFgMissed());
+
         statsheet.setFtPercentage(stat.extractStat(20));
+        statsheet.setFtScored(stat.extractStat(15));
+        statsheet.setFtMissed(stat.extractStat(16));
+        statsheet.setFtAttempted(statsheet.getFtScored() + statsheet.getFtMissed());
+
         statsheet.setThreePointers(stat.extractStat(17));
         statsheet.setRebounds(stat.extractStat(6));
         statsheet.setAssists(stat.extractStat(3));
