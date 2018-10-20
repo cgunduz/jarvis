@@ -17,7 +17,7 @@ public class SeasonReportTest {
     @Test
     public void notReallyATest() {
 
-        SeasonReportCompiler seasonReportCompiler = new SeasonReportCompiler(League.PARALEL_LEAGUE);
+        SeasonReportCompiler seasonReportCompiler = new SeasonReportCompiler(League.SCUM_LEAGUE);
         List<PlayerReport> playerReports = seasonReportCompiler.compile();
 
         Reporter reporter = new Reporter();

@@ -35,6 +35,8 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
     private static final String LEAGUE_PLAYER_URL =
             "http://fantasy.espn.com/apis/v3/games/fba/seasons/2019/segments/0/leagues/LEAGUE_ID_PLACEHOLDER?scoringPeriodId=1&view=kona_player_info";
 
+    private static final String weirdHeader = "{\"players\":{\"filterSlotIds\":{\"value\":[0,1,2,3,4,5,6,7,8,9,10,11]},\"statParams\":{},\"filterIds\":{\"value\":[]},\"filterStatsForSourceIds\":{\"value\":[]},\"limit\":350,\"offset\":0,\"sortPercOwned\":{\"sortPriority\":1,\"sortAsc\":false},\"sortDraftRanks\":{\"sortPriority\":100,\"sortAsc\":true,\"value\":\"STANDARD\"},\"filterStatsForTopScoringPeriodIds\":{\"value\":20,\"additionalValue\":[\"002019\",\"102019\",\"002018\",\"012019\",\"022019\",\"032019\",\"042019\"]}}}";
+
     @Autowired
     GlobalConfiguration globalConfiguration;
 
@@ -59,7 +61,7 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
                     .ignoreContentType(true)
                     .maxBodySize(0)
                     .header("cookie", globalConfiguration.getCookie())
-                    //.header("X-Fantasy-Filter", weirdHeader)
+                    .header("X-Fantasy-Filter", weirdHeader)
                     .get();
 
             String json = doc.text();
@@ -69,6 +71,7 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
             e.printStackTrace();
         }
         for (EspnPlayer espnPlayer: mappedJson.getPlayers()) {
+
             BasketballPlayer basketballPlayer = new BasketballPlayer();
             basketballPlayer.setTeamId(String.valueOf(espnPlayer.getOnTeamId()));
             basketballPlayer.setTeamName(String.valueOf(espnPlayer.getOnTeamId()));
@@ -114,13 +117,13 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
 
         statsheet.setFgPercentage(stat.extractStat(19));
         statsheet.setFgScored(stat.extractStat(13));
-        statsheet.setFgMissed(stat.extractStat(14));
-        statsheet.setFgAttempted(statsheet.getFgScored() + statsheet.getFgMissed());
+        statsheet.setFgAttempted(stat.extractStat(14));
+        statsheet.setFgMissed(statsheet.getFgAttempted() - statsheet.getFgScored());
 
         statsheet.setFtPercentage(stat.extractStat(20));
         statsheet.setFtScored(stat.extractStat(15));
-        statsheet.setFtMissed(stat.extractStat(16));
-        statsheet.setFtAttempted(statsheet.getFtScored() + statsheet.getFtMissed());
+        statsheet.setFtAttempted(stat.extractStat(16));
+        statsheet.setFtMissed(statsheet.getFtAttempted() - statsheet.getFtScored());
 
         statsheet.setThreePointers(stat.extractStat(17));
         statsheet.setRebounds(stat.extractStat(6));
@@ -143,7 +146,7 @@ public class SeasonStatsheetScraper implements PlayerStatsheetScraper {
                 // Statements
                 return StatsheetType.PROJECTIONS;
 
-            case "102018" :
+            case "002018" :
                 // Statements
                 return StatsheetType.PREVIOUS_YEAR;
 

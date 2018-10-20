@@ -19,7 +19,7 @@ public class TeamTest {
     @Test
     public void notReallyATest() {
 
-        TeamReportCompiler teamReportCompiler = new TeamReportCompiler(League.PARALEL_LEAGUE);
+        TeamReportCompiler teamReportCompiler = new TeamReportCompiler(League.SCUM_LEAGUE);
         List<ReportablePlayerTeam> teamReports = teamReportCompiler.compile();
 
         Reporter reporter = new Reporter();
